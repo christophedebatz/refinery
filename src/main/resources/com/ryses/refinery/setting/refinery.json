@@ -1,0 +1,76 @@
+{
+  "projects": [
+    {
+      "name": "api-front",
+      "path": null,
+      "repository": "https://github.com/laboutiqueofficielle/api-front",
+      "docker": {
+        "container": "php-api-front"
+      }
+    },
+    {
+      "name": "api-back",
+      "path": null,
+      "repository": "https://github.com/laboutiqueofficielle/api-back",
+      "docker": {
+        "container": "php-api-back"
+      }
+    },
+    {
+      "name": "carrier-service",
+      "path": null,
+      "repository": "https://github.com/laboutiqueofficielle/carrier-service",
+      "docker": {
+        "container": "php-service-carrier"
+      }
+    },
+    {
+      "name": "mailer-service",
+      "path": null,
+      "repository": "https://github.com/laboutiqueofficielle/mailer-service",
+      "docker": {
+        "container": "php-service-mailer"
+      }
+    },
+    {
+      "name": "order-service",
+      "path": null,
+      "repository": "https://github.com/laboutiqueofficielle/order-service",
+      "docker": {
+        "container": "php-service-order"
+      }
+    },
+    {
+      "name": "product-service",
+      "path": null,
+      "repository": "https://github.com/laboutiqueofficielle/product-service",
+      "docker": {
+        "container": "php-service-product"
+      }
+    },
+    {
+      "name": "user-service",
+      "path": null,
+      "repository": "https://github.com/laboutiqueofficielle/user-service",
+      "docker": {
+        "container": "php-service-user"
+      }
+    },
+    {
+      "name": "utility-service",
+      "path": null,
+      "repository": "https://github.com/laboutiqueofficielle/utility-service",
+      "docker": {
+        "container": "php-service-utility"
+      }
+    },
+    {
+      "name": "legacy",
+      "path": null,
+      "repository": "https://github.com/laboutiqueofficielle/LBO_legacy",
+      "docker": {
+        "container": "legacy-php"
+      }
+    }
+  ]
+}

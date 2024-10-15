@@ -1,0 +1,50 @@
+.list-view {
+    -fx-border-radius: 20px 0 0 0;
+    -fx-background-radius: 17px 0 0 0;
+    -fx-padding: 0px;
+    -fx-background-color: transparent;
+}
+
+.list-view .first-item {
+    -fx-border-radius: 20px 0 0 0;
+    -fx-background-radius: 17px 0 0 0;
+}
+
+.list-view .list-cell:even {
+    -fx-background-color: rgb(61,63,65);
+}
+
+.list-view .list-cell:odd {
+    -fx-background-color: rgb(43,45,48);
+}
+
+.list-cell .label {
+    -fx-text-fill: #FFF;
+}
+
+.list-cell .button {
+    -fx-background-color: rgb(61,63,65);
+    -fx-background-radius: 17px;
+    -fx-border-radius: 17px;
+    -fx-font-size: 10px;
+    -fx-padding: 2px;
+    -fx-label-padding: 2px;
+    -fx-text-fill: lightgray;
+}
+
+.list-cell .button:hover {
+    -fx-cursor: hand;
+    -fx-background-radius: 17px;
+    -fx-border-radius: 17px;
+    -fx-font-size: 10px;
+    -fx-padding: 2px;
+    -fx-label-padding: 2px;
+    -fx-text-fill: white;
+}
+
+.small {
+    -fx-font-size: 10px;
+    -fx-padding: 2px;
+    -fx-label-padding: 2px;
+    -fx-text-fill: gray;
+}

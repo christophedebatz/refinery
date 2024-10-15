@@ -1,0 +1,80 @@
+.tray_container_front {
+    -fx-background-color: transparent;
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+    -fx-border-width: 6px;
+    -fx-border-color: rgb(61,63,65);
+}
+
+GridPane {
+    -fx-border-radius: 20px;
+    -fx-background-radius: 17px;
+}
+
+.tray_container_background {
+    -fx-background-color: rgb(30,31,34);
+    -fx-background-radius: 17px;
+    -fx-border-radius: 17px;
+}
+
+.tab-header-area .tab-header-background {
+    -fx-background-color: rgb(30,31,34);
+}
+
+.tab-body-area {
+    -fx-background-color: rgb(61,63,65);
+}
+
+.tab {
+    -fx-background-color: rgb(30,31,34);
+    -fx-border-width: 0px;
+    -fx-padding: 10px;
+}
+
+.close-button {
+    -fx-background-color: rgb(61,63,65);
+    -fx-background-radius: 17px;
+    -fx-border-radius: 17px;
+    -fx-font-size: 10px;
+    -fx-padding: 2px;
+    -fx-label-padding: 2px;
+    -fx-text-fill: lightgray;
+}
+
+.close-button:hover {
+    -fx-cursor: hand;
+    -fx-background-radius: 17px;
+    -fx-border-radius: 17px;
+    -fx-font-size: 10px;
+    -fx-padding: 2px;
+    -fx-label-padding: 2px;
+    -fx-text-fill: white;
+}
+
+.tab:hover .tab-label {
+    -fx-cursor: hand;
+    -fx-text-fill: lightgray;
+}
+
+.tab:disabled .tab-label {
+    -fx-cursor: disappear;
+    -fx-text-fill: gray;
+}
+
+.tab:visited .tab-label {
+    -fx-text-fill: gray;
+}
+
+.tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
+    -fx-border-width: 0px;
+}
+
+.tab-label {
+    -fx-text-fill: gray;
+    -fx-font-size: 14px;
+}
+
+.tab:selected .tab-label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
