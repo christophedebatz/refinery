@@ -50,7 +50,7 @@ public class RefinerySpringApp extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         Platform.setImplicitExit(false);
 
         if (!SystemTray.isSupported()) {
@@ -59,6 +59,7 @@ public class RefinerySpringApp extends Application {
         }
 
         var stage = new Stage();
+        stage.setTitle("Refinery");
         stage.initOwner(primaryStage);
         stage.setWidth(400);
         stage.setHeight(450);
@@ -67,14 +68,26 @@ public class RefinerySpringApp extends Application {
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initStyle(StageStyle.TRANSPARENT);
         stage.setScene(new Scene(root, Color.TRANSPARENT));
+        setTaskbarIcon();
 
         springContext.getBeanFactory().registerSingleton("firstStage", stage);
-
         trayController.display(stage);
     }
 
     @Override
     public void stop() throws Exception {
         springContext.stop();
+    }
+
+    private void setTaskbarIcon() {
+        if (Taskbar.isTaskbarSupported()) {
+            var taskbar = Taskbar.getTaskbar();
+
+            if (taskbar.isSupported(Taskbar.Feature.ICON_IMAGE)) {
+                final Toolkit defaultToolkit = Toolkit.getDefaultToolkit();
+                var dockIcon = defaultToolkit.getImage(getClass().getResource("icon.png"));
+                taskbar.setIconImage(dockIcon);
+            }
+        }
     }
 }

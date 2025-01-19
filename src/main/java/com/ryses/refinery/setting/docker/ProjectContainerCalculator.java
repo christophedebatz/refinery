@@ -1,21 +1,26 @@
 package com.ryses.refinery.setting.docker;
 
 import com.github.dockerjava.api.model.Container;
+import com.google.common.collect.Lists;
 import com.ryses.refinery.setting.SettingService;
-import com.ryses.refinery.setting.docker.domain.ProjectContainer;
+import com.ryses.refinery.setting.docker.domain.VersionedProjectContainer;
 import com.ryses.refinery.setting.dto.Project;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.regex.Pattern;
 
 @Component
+@Scope(BeanDefinition.SCOPE_SINGLETON)
 public class ProjectContainerCalculator {
 
     private final ContainerProvider containerProvider;
     private final SettingService settingService;
-    private final Map<String, Collection<ProjectContainer>> projectContainers = new HashMap<>();
+    private Collection<Container> containers = null;
 
     @Autowired
     public ProjectContainerCalculator(ContainerProvider containerProvider, SettingService settingService) {
@@ -23,44 +28,67 @@ public class ProjectContainerCalculator {
         this.settingService = settingService;
     }
 
-    public Collection<ProjectContainer> calculate(Project project) {
-        if (projectContainers.containsKey(project.getName())) {
-            return projectContainers.get(project.getName());
-        }
-
+    public HashMap<String, Collection<VersionedProjectContainer>> calculate() {
         var settings = this.settingService.get();
 
         if (settings.isEmpty()) {
-            return Collections.emptyList();
+            return null;
         }
 
-        var containers = this.containerProvider.provide();
+        var projectContainers = new HashMap<String, Collection<VersionedProjectContainer>>();
+        var dockerContainers = this.loadContainers();
 
-        for (Container container : containers) {
+        dockerContainers.forEach(container -> {
             var pattern = Pattern.compile("(service-)?(?<name>[a-zA-Z-_]+)(-v(?<version>[0-9]+))?-php");
             var matcher = pattern.matcher(container.getImage());
 
-            matcher.find();
-            Optional<String> projectName = Optional.of(matcher.group("name"));
-            Optional<String> projectVersion = Optional.ofNullable(matcher.group("version"));
+            while (matcher.find()) {
+                var serviceName = Optional.ofNullable(matcher.group("name"));
+                var serviceVersion = Optional.ofNullable(matcher.group("version"))
+                        .map(version -> String.format("v%s", version))
+                        .orElse("default")
+                ;
 
-            settings.get().getProjects().forEach(p -> {
-                var sanitizedName = p.getName().replace("-service", "");
-
-                if (sanitizedName.equalsIgnoreCase(projectName.get())) {
-                    if (this.projectContainers.containsKey(p.getName())) {
-                        var projects = this.projectContainers.get(p.getName());
-                        projects.add(new ProjectContainer(p, container, projectVersion));
-                        this.projectContainers.put(p.getName(), projects);
-                    } else {
-                        Collection<ProjectContainer> list = new ArrayList<>();
-                        list.add(new ProjectContainer(p, container, projectVersion));
-                        this.projectContainers.put(p.getName(), list);
-                    }
+                if (serviceName.isEmpty()) {
+                    continue;
                 }
-            });
+
+                try {
+                    settings.ifPresent(setting -> {
+                        setting.getProjects().forEach(p -> {
+                            var sanitizedName = p.getName().replace("-service", "");
+
+                            if (sanitizedName.equalsIgnoreCase(serviceName.get())) {
+                                var key = getKey(p.getName());
+                                var versionedContainer = new VersionedProjectContainer(container, serviceVersion);
+
+                                if (projectContainers.containsKey(key)) {
+                                    var versions = projectContainers.get(key);
+                                    versions.add(versionedContainer);
+                                } else {
+                                    projectContainers.put(key, Lists.newArrayList(versionedContainer));
+                                }
+                            }
+                        });
+                    });
+                } catch (IllegalStateException ex) {
+                    System.out.println(ex.getMessage());
+                }
+            }
+        });
+
+        return projectContainers;
+    }
+
+    private String getKey(String name) {
+        return MessageFormat.format("{0}", name);
+    }
+
+    private Collection<Container> loadContainers() {
+        if (null == containers) {
+            containers = this.containerProvider.provide();
         }
 
-        return projectContainers.get(project.getName());
+        return containers;
     }
 }

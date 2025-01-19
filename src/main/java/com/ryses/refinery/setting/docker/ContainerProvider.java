@@ -6,6 +6,7 @@ import com.github.dockerjava.core.DockerClientBuilder;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.net.SocketException;
 import java.util.Collection;
 import java.util.List;
 
@@ -22,15 +23,23 @@ public class ContainerProvider {
         try (DockerClient dockerClient = DockerClientBuilder.getInstance().build()) {
             containers = dockerClient
                     .listContainersCmd()
-                    .withShowAll(false)
+                    .withShowAll(true)
                     .withFilter("name", List.of("php-*"))
                     .exec()
-                    .stream().distinct().toList()
             ;
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Docker seems to be closed. Nested error is " + e.getMessage(), e);
         }
 
         return containers;
+    }
+
+    public boolean isContainerRunning(String id) {
+        try (DockerClient dockerClient = DockerClientBuilder.getInstance().build()) {
+            var inspection = dockerClient.inspectContainerCmd(id).exec();
+            return Boolean.TRUE.equals(inspection.getState().getRunning());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

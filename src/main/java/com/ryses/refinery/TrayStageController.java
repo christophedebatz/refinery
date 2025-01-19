@@ -10,13 +10,9 @@ import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationStartupAware;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -30,7 +26,6 @@ import java.util.ResourceBundle;
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 @Controller
 public class TrayStageController implements Initializable {
-    private final ApplicationContext applicationContext;
     private final SettingService settingService;
 
     @FXML
@@ -40,8 +35,7 @@ public class TrayStageController implements Initializable {
     private TabPane tabs;
 
     @Autowired
-    public TrayStageController(ApplicationContext applicationContext, SettingService settingService) {
-        this.applicationContext = applicationContext;
+    public TrayStageController(SettingService settingService) {
         this.settingService = settingService;
     }
 
